@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calculator } from './Calculator';
+import { ContactForm } from './ContactForm';
 import { ArrowRight } from 'lucide-react';
 
 type InputData = {
@@ -18,6 +19,8 @@ type InputData = {
   Equity: number;
   IMP: number;
   Market: number;
+  TitleChange: number;
+  Refinanced: number;
 };
 
 function App() {
@@ -37,6 +40,8 @@ function App() {
     Equity: 1,
     IMP: 0,
     Market: 0,
+    TitleChange: 0,
+    Refinanced: 0,
   });
 
   const [showResults, setShowResults] = useState(false);
@@ -70,7 +75,7 @@ function App() {
         
         // Reset Market when IMP changes to No
         if (name === 'IMP' && numericValue === 0) {
-          newData.Market = 0;
+          // newData.Market = 0;
           // Reset improvement fields to 0 when IMP is No but keep them available for calculations
           newData.Improvements_Date_of_Separation_Date_of_Marriage = 0;
           newData.Improvements_Date_of_Marriage_Date_of_Acquisition = 0;
@@ -92,15 +97,70 @@ function App() {
     setShowResults(true);
   };
 
+  const requiresAdditionalHelp = inputData.TitleChange === 1 || inputData.Refinanced === 1;
   return (
     <div className="min-h-screen bg-white py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {!showResults ? (
           <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg border border-gray-200 p-6 space-y-6">
-          <h1 className="text-2xl font-bold text-[#051B47] mb-6">MOORE MARSDEN CALCULATION</h1>
             <div className="space-y-4 mb-6">
-              <h2 className="text-lg font-semibold text-[#051B47]">A free real estate apportionment calculator for California Family Law!</h2>
               <div className="space-y-4">
+                <div className="flex items-center space-x-6">
+                  <span className="text-sm font-medium text-black">Was there a title change during the marriage?</span>
+                  <div className="flex space-x-4">
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="TitleChange"
+                        value="yes"
+                        checked={inputData.TitleChange === 1}
+                        onChange={handleInputChange}
+                        className="form-radio text-[#ff743d] focus:ring-[#ff743d]"
+                      />
+                      <span className="ml-2 text-black">Yes</span>
+                    </label>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="TitleChange"
+                        value="no"
+                        checked={inputData.TitleChange === 0}
+                        onChange={handleInputChange}
+                        className="form-radio text-[#ff743d] focus:ring-[#ff743d]"
+                      />
+                      <span className="ml-2 text-black">No</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-6">
+                  <span className="text-sm font-medium text-black">Was the property refinanced?</span>
+                  <div className="flex space-x-4">
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="Refinanced"
+                        value="yes"
+                        checked={inputData.Refinanced === 1}
+                        onChange={handleInputChange}
+                        className="form-radio text-[#ff743d] focus:ring-[#ff743d]"
+                      />
+                      <span className="ml-2 text-black">Yes</span>
+                    </label>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="Refinanced"
+                        value="no"
+                        checked={inputData.Refinanced === 0}
+                        onChange={handleInputChange}
+                        className="form-radio text-[#ff743d] focus:ring-[#ff743d]"
+                      />
+                      <span className="ml-2 text-black">No</span>
+                    </label>
+                  </div>
+                </div>
+
                 <div>
                   <div>
                       <input
@@ -175,7 +235,7 @@ function App() {
                   </div>
                 )}
 
-                {inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 1 && (
+                {inputData.DOD === 1 && inputData.Equity === 1 && (
                   <div className="flex items-center space-x-6">
                     <span className="text-sm font-medium text-black">Did this property appreciate in value?</span>
                     <div className="flex space-x-4">
@@ -239,7 +299,7 @@ function App() {
                       name="Date_of_Acquisition_Fair_Market_Value"
                       value={inputData.Date_of_Acquisition_Fair_Market_Value}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -251,7 +311,7 @@ function App() {
                       name="Date_of_Marriage_Fair_Market_Value"
                       value={inputData.Date_of_Marriage_Fair_Market_Value}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -263,7 +323,7 @@ function App() {
                       name="Date_of_Separation_Fair_Market_Value"
                       value={inputData.Date_of_Separation_Fair_Market_Value}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -276,7 +336,7 @@ function App() {
                         name="Date_of_Division_Fair_Market_Value"
                         value={inputData.Date_of_Division_Fair_Market_Value}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                        className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                       />
                     </label>
                   </div>
@@ -293,7 +353,7 @@ function App() {
                       name="Date_of_Acquisition_Debt"
                       value={inputData.Date_of_Acquisition_Debt}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -305,7 +365,7 @@ function App() {
                       name="Date_of_Marriage_Debt"
                       value={inputData.Date_of_Marriage_Debt}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -317,7 +377,7 @@ function App() {
                       name="Date_of_Separation_Debt"
                       value={inputData.Date_of_Separation_Debt}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                      className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                     />
                   </label>
                 </div>
@@ -330,7 +390,7 @@ function App() {
                         name="Date_of_Division_Debt"
                         value={inputData.Date_of_Division_Debt}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                        className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                       />
                     </label>
                   </div>
@@ -350,7 +410,7 @@ function App() {
                         name="Improvements_Date_of_Marriage_Date_of_Acquisition"
                         value={inputData.Improvements_Date_of_Marriage_Date_of_Acquisition}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                        className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                       />
                     </label>
                   </div>
@@ -362,7 +422,7 @@ function App() {
                         name="Improvements_Date_of_Separation_Date_of_Marriage"
                         value={inputData.Improvements_Date_of_Separation_Date_of_Marriage}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                        className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                       />
                     </label>
                   </div>
@@ -374,7 +434,7 @@ function App() {
                         name="Improvements_Date_of_Division_Date_of_Separation"
                         value={inputData.Improvements_Date_of_Division_Date_of_Separation}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
+                        className="mt-1 px-3 py-2 border  block w-full rounded-md border-gray-300 shadow-sm focus:border-[#ff743d] focus:ring-[#ff743d] text-black"
                       />
                     </label>
                   </div>
@@ -391,7 +451,13 @@ function App() {
             </button>
           </form>
         ) : (
-          <Calculator inputData={inputData} setShowResults={setShowResults} />
+          <>
+            {requiresAdditionalHelp ? (
+              <ContactForm setShowResults={setShowResults} inputData={inputData} />
+            ) : (
+              <Calculator inputData={inputData} setShowResults={setShowResults} />
+            )}
+          </>
         )}
       </div>
     </div>
