@@ -26,7 +26,8 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
   const [contactForm, setContactForm] = useState({
     fullName: '',
     email: '',
-    phone: ''
+    phone: '',
+    message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -206,7 +207,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
     return (value * 100).toFixed(2) + '%';
   };
 
-  const handleContactFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContactFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setContactForm(prev => ({
       ...prev,
@@ -226,6 +227,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
         fullName: contactForm.fullName,
         email: contactForm.email,
         phone: contactForm.phone,
+        message: contactForm.message,
         
         // Input data
         inputData: inputData,
@@ -316,7 +318,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
 
       if (response.ok) {
         setSubmitMessage('Thank you! Your request has been submitted successfully. We will contact you soon with your detailed analysis.');
-        setContactForm({ fullName: '', email: '', phone: '' });
+        setContactForm({ fullName: '', email: '', phone: '', message: '' });
       } else {
         setSubmitMessage('There was an error submitting your request. Please try again.');
       }
@@ -330,14 +332,18 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
   // Determine which scenario to display
   const isScenario1 = inputData.DOD === 0; // DD=No
   const isScenario2 = inputData.DOD === 1 && inputData.Equity === 0; // DD=Yes, Equity=No
-  const isScenario3 = inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 0; // DD=Yes, Equity=Yes, IMP=No
+  const isScenario3 = inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 0 && inputData.Market === 0; // DD=Yes, Equity=Yes, IMP=No, Market=No
   const isScenario4 = inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 1 && inputData.Market === 0; // DD=Yes, Equity=Yes, IMP=Yes, Market=No
-  const isScenario5 = inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 1 && inputData.Market === 1; // DD=Yes, Equity=Yes, IMP=Yes, Market=Yes
+  // const isScenario5 = inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 1 && inputData.Market === 1; // DD=Yes, Equity=Yes, IMP=Yes, Market=Yes
+
+  const isScenario5 =
+  (inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 1 && inputData.Market === 1) ||
+  (inputData.DOD === 1 && inputData.Equity === 1 && inputData.IMP === 0 && inputData.Market === 1); // DD=Yes, Equity=Yes, IMP=Yes/No, Market=Yes
+
 
   return (
     <div className="bg-white shadow-lg rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#051B47]">MOORE MARSDEN CALCULATION</h1>
         <button
           onClick={() => setShowResults(false)}
           className="flex items-center text-[#ff743d] hover:text-[#e6653a] transition-colors duration-200"
@@ -365,7 +371,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
                   value={contactForm.fullName}
                   onChange={handleContactFormChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff743d] focus:border-[#ff743d] text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#000000] focus:border-[#000000] text-black"
                 />
               </div>
               <div>
@@ -378,7 +384,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
                   value={contactForm.email}
                   onChange={handleContactFormChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff743d] focus:border-[#ff743d] text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#000000] focus:border-[#000000] text-black"
                 />
               </div>
               <div>
@@ -391,10 +397,25 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
                   value={contactForm.phone}
                   onChange={handleContactFormChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff743d] focus:border-[#ff743d] text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#000000] focus:border-[#000000] text-black"
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-1">
+                Additional Details (Optional)
+              </label>
+              <textarea
+                name="message"
+                value={contactForm.message}
+                onChange={handleContactFormChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#000000] focus:border-[#000000] text-black"
+                placeholder="Please provide any additional details about your property situation that might help our team prepare for your consultation..."
+              />
+            </div>
+
             <div className="flex items-center justify-between">
               <button
                 type="submit"
