@@ -46,6 +46,24 @@ function App() {
 
   const [showResults, setShowResults] = useState(false);
 
+  // Calculate totals for validation
+  const userTotalImprovements = 
+    inputData.Improvements_Date_of_Marriage_Date_of_Acquisition +
+    inputData.Improvements_Date_of_Separation_Date_of_Marriage +
+    inputData.Improvements_Date_of_Division_Date_of_Separation;
+
+  const userTotalAppreciation = 
+    (inputData.Date_of_Marriage_Fair_Market_Value - inputData.Date_of_Acquisition_Fair_Market_Value) +
+    (inputData.Date_of_Separation_Fair_Market_Value - inputData.Date_of_Marriage_Fair_Market_Value) +
+    (inputData.Date_of_Division_Fair_Market_Value - inputData.Date_of_Separation_Fair_Market_Value);
+
+  // Check if improvements exceed appreciation (only when both IMP and Market are Yes)
+  const improvementsExceedAppreciation = 
+    inputData.IMP === 1 && 
+    inputData.Market === 1 && 
+    userTotalImprovements > 0 &&
+    userTotalImprovements > userTotalAppreciation;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     if (type === 'radio') {
@@ -442,9 +460,39 @@ function App() {
               </div>
             )}
 
+            {/* Validation Error Message */}
+            {improvementsExceedAppreciation && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Validation Error
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <p>Improvement costs should not exceed appreciation.</p>
+                      <div className="mt-2 space-y-1">
+                        <p><strong>Total Improvements:</strong> ${userTotalImprovements.toLocaleString()}</p>
+                        <p><strong>Total Appreciation:</strong> ${userTotalAppreciation.toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
-              className="mt-6 w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#ff743d] hover:bg-[#e6653a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff743d] transition-colors duration-200"
+              disabled={improvementsExceedAppreciation}
+              className={`mt-6 w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium transition-colors duration-200 ${
+                improvementsExceedAppreciation
+                  ? 'text-gray-400 bg-gray-300 cursor-not-allowed'
+                  : 'text-white bg-[#ff743d] hover:bg-[#e6653a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff743d]'
+              }`}
             >
               Calculate Results
               <ArrowRight className="ml-2 h-5 w-5" />
