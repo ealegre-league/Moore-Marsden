@@ -68,11 +68,11 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
   const Separation_Principal_Reduction = Date_of_Marriage_Debt_Date_of_Acquisition_Debt_Principal_Reduction + Date_of_Division_Debt_Date_of_Separation_Debt_Principal_Reduction;
   const Community_Principal_Reduction = Date_of_Separation_Debt_Date_of_Marriage_Debt_Principal_Reduction;
 
-  const Pre_Marital_Appreciation_Total = Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation;
+  const Pre_Marital_Appreciation_Total = Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation - inputData.Improvements_Date_of_Marriage_Date_of_Acquisition;
   let Apportionable_Appreciation_Total = inputData.Date_of_Division_Fair_Market_Value - inputData.Date_of_Marriage_Fair_Market_Value;
   const Appreciation_Total = Pre_Marital_Appreciation_Total + Apportionable_Appreciation_Total;
 
-  const Pre_Marital_Appreciation_Separation = Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation;
+  const Pre_Marital_Appreciation_Separation = Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation - inputData.Improvements_Date_of_Marriage_Date_of_Acquisition;
   let Apportionable_Appreciation_Separation = Apportionable_Appreciation_Total * Separation_Property_Percentage_Appreciation;
   let Appreciation_Separation = Pre_Marital_Appreciation_Separation + Apportionable_Appreciation_Separation;
 
@@ -144,7 +144,7 @@ export function Calculator({ inputData, setShowResults }: CalculatorProps) {
   
   const Less_Improvements = -(Totals_Improvements);
   const Market_Appreciation = Totals_Appreciation + Less_Improvements;
-  const Less_Premarital_Appreciation = -(Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation);
+  const Less_Premarital_Appreciation = -(Date_of_Marriage_Fair_Market_Value_Date_of_Acquisition_Fair_Market_Value_Appreciation) + inputData.Improvements_Date_of_Marriage_Date_of_Acquisition;
   const Apportionable_Appreciation_Apportionable_Appreciation = Market_Appreciation + Less_Premarital_Appreciation;
 
   const Total_Purchase_Price_Total = Down_Payment_Total + Principal_Reduction_Total + inputData.Date_of_Division_Debt;
