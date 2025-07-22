@@ -108,7 +108,7 @@ export function ContactForm({ setShowResults, inputData }: ContactFormProps) {
           </div>
           <h2 className="text-2xl font-bold text-[#051B47] mb-2">Thank You!</h2>
           <p className="text-gray-600">
-            We've received your information and will contact you within 24 hours to discuss your property division case.
+            We've received your information and will contact you within 2 business days to discuss your property division case.
           </p>
         </div>
         
@@ -231,7 +231,7 @@ export function ContactForm({ setShowResults, inputData }: ContactFormProps) {
         <div className="bg-gray-50 rounded-lg p-6">
           <h3 className="font-semibold text-[#051B47] mb-3">What to expect:</h3>
           <ul className="text-sm text-gray-600 space-y-2">
-            <li>• Response within 24 hours</li>
+            <li>• Response within 2 business days</li>
             <li>• Free initial consultation</li>
             <li>• Customized analysis for your specific situation</li>
             <li>• Expert guidance on complex property division matters</li>
